@@ -55,14 +55,7 @@ Constructo (Szlazak Gestion) est une application de suivi et de pilotage interne
 - barryvdh/laravel-dompdf (PDF)
 - guzzlehttp/guzzle (HTTP client)
 - laravel/sanctum (auth API)
-- phpmailer/phpmailer (emails)
 - fruitcake/laravel-cors (CORS)
-
-## Scheduler & rappels email
-Les rappels d'événements sont envoyés 1h avant. Lancer le scheduler :
-```bash
-php artisan schedule:work
-```
 
 ## Exports
 - CSV global fiches d'heures
