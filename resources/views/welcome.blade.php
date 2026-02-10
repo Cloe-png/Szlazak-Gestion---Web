@@ -529,7 +529,7 @@
 
                 <!-- Message de bienvenue personnalisé -->
                 <h2 class="welcome-title animate-fade-in-up animate-delay-1">
-                    Bienvenue sur <span>Constructo</span>
+                    Bienvenue sur <span>SZLAZAK Gestion</span>
                 </h2>
                 
                 <p class="welcome-message animate-fade-in-up animate-delay-2">

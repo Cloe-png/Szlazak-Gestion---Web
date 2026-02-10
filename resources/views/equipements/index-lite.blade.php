@@ -332,19 +332,6 @@
                             <a href="{{ route('equipements.show', $equipement->id) }}" class="btn-action btn-view">
                                 <i class="fas fa-eye"></i> Voir
                             </a>
-                            @if(auth()->user() && auth()->user()->isAdmin())
-                            <a href="{{ route('equipements.edit', $equipement->id) }}" class="btn-action btn-edit">
-                                <i class="fas fa-edit"></i> Modifier
-                            </a>
-                            <form action="{{ route('equipements.destroy', $equipement->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" 
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément du stockage ?')">
-                                    <i class="fas fa-trash"></i> Supprimer
-                                </button>
-                            </form>
-                            @endif
                         </div>
                     </div>
                 </div>

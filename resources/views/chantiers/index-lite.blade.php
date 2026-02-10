@@ -429,20 +429,6 @@
                                     <a href="{{ route('chantiers.show', $chantier->id) }}" class="btn btn-view" title="Voir">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @if(auth()->user() && auth()->user()->isAdmin())
-                                    <a href="{{ route('chantiers.edit', $chantier->id) }}" class="btn btn-edit" title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('chantiers.destroy', $chantier->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-delete" 
-                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce chantier ?')"
-                                                title="Supprimer">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>

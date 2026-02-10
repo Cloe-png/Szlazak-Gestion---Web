@@ -430,11 +430,6 @@
                                 <a href="{{ route('evenements.show', $evenement->id) }}" class="btn btn-sm btn-outline-info">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                @if(auth()->user() && auth()->user()->isAdmin())
-                                <a href="{{ route('evenements.edit', $evenement->id) }}" class="btn btn-sm btn-outline-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -470,9 +465,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        @if(auth()->user() && auth()->user()->isAdmin())
-                        <a href="#" class="btn btn-primary" id="eventModalEdit">Modifier</a>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -536,11 +528,6 @@
                     
                     // Remplir le modal
                     document.getElementById('eventModalTitle').textContent = event.title;
-                    const editLink = document.getElementById('eventModalEdit');
-                    if (editLink) {
-                        editLink.href = /evenements//edit;
-                    }
-                    
                     const modalBody = document.getElementById('eventModalBody');
                     modalBody.innerHTML = `
                         <div class="mb-3">

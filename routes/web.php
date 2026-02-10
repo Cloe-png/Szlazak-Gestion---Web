@@ -12,7 +12,7 @@ use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
-| Routes d'authentification (Laravel Breeze)
+| Routes d'authentification (Laravel)
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';

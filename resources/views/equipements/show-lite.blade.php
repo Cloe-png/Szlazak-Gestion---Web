@@ -90,11 +90,6 @@
                     <p class="mb-0 mt-2" style="opacity: 0.9;">Consultez les informations détaillées</p>
                 </div>
                 <div class="d-flex gap-2">
-                    @if(auth()->user() && auth()->user()->isAdmin())
-                    <a href="{{ route('equipements.edit', $equipement->id) }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-edit me-2"></i>Modifier
-                    </a>
-                    @endif
                     @if(auth()->user() && !auth()->user()->isAdmin())
                     <a href="{{ route('equipements.loans.create', ['equipement_id' => $equipement->id]) }}" class="btn btn-light btn-lg">
                         <i class="fas fa-hand-holding me-2"></i>Emprunter

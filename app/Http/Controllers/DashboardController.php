@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chantier;
 use App\Models\Equipement;
 use App\Models\Evenement;
+use App\Models\Timesheet;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -20,6 +21,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $missingTimesheetToday = false;
 
         if ($user && !$user->isAdmin()) {
             $chantiersEnCours = $user->chantiersAttribues()->where('statut', 'En cours')->count();
@@ -45,6 +47,10 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get();
+
+            $missingTimesheetToday = !Timesheet::where('user_id', $user->id)
+                ->whereDate('date_travail', now()->toDateString())
+                ->exists();
         } else {
             $chantiersEnCours = Chantier::where('statut', 'En cours')->count();
             $chantiersTermines = Chantier::where('statut', 'Terminé')->count();
@@ -75,7 +81,9 @@ class DashboardController extends Controller
             'prochainsEvenements',
             'derniersEvenements',
             'derniersChantiers',
+            'missingTimesheetToday',
             'user'
         ));
     }
 }
+

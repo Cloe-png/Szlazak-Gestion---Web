@@ -601,6 +601,16 @@
 
             </div>
         </div>
+
+        @if($user && !$user->isAdmin() && $missingTimesheetToday)
+        <div class="alert alert-warning d-flex align-items-center gap-2 mb-4" role="alert">
+            <i class="fas fa-triangle-exclamation"></i>
+            <div>
+                Vous n'avez pas encore rempli votre fiche d'heures aujourd'hui.
+                <a href="{{ route('timesheets.create') }}" class="alert-link ms-1">Créer ma fiche</a>
+            </div>
+        </div>
+        @endif
         @endif
 
         <!-- Derniers Chantiers et Événements -->
