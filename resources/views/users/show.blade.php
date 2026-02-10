@@ -543,12 +543,6 @@
                     <i class="fas fa-clock me-2"></i>Fiches d'Heures
                 </h5>
                 <div class="d-flex align-items-center gap-2">
-                    <form action="{{ route('users.timesheets.export-weekly', $user->id) }}" method="GET" class="d-flex align-items-center gap-2">
-                        <input type="week" name="week" class="form-control form-control-sm" required>
-                        <button type="submit" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-file-export me-1"></i>Exporter (hebdo)
-                        </button>
-                    </form>
                     <a href="{{ route('timesheets.create', ['user_id' => $user->id]) }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-plus me-1"></i>Ajouter une fiche
                     </a>

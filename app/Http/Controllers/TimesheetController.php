@@ -54,7 +54,7 @@ class TimesheetController extends Controller
         ];
 
         if ($user && !$user->isAdmin()) {
-            return view('timesheets.index-lite', compact('timesheets'));
+            return view('timesheets.index-lite', compact('timesheets', 'chantiers', 'filters'));
         }
 
         return view('timesheets.index', compact('timesheets', 'chantiers', 'filters'));
@@ -66,11 +66,11 @@ class TimesheetController extends Controller
 
         if ($user && !$user->isAdmin()) {
             $users = User::with('role')->whereKey($user->id)->get();
-            $chantiers = $user->chantiersAttribues()->where('statut', '!=', 'TerminÃ©')->get();
+            $chantiers = $user->chantiersAttribues()->where('statut', '!=', 'Terminé')->get();
             $selectedUser = $user->id;
         } else {
             $users = User::all();
-            $chantiers = Chantier::where('statut', '!=', 'TerminÃ©')->get();
+            $chantiers = Chantier::where('statut', '!=', 'Terminé')->get();
             $selectedUser = $request->get('user_id');
         }
 
@@ -122,11 +122,11 @@ class TimesheetController extends Controller
 
         if ($user && !$user->isAdmin()) {
             return redirect()->route('timesheets.index')
-                ->with('success', 'Fiche d\'heures crÃ©Ã©e avec succÃ¨s.');
+                ->with('success', 'Fiche d\'heures créée avec succès.');
         }
 
         return redirect()->route('users.show', $request->user_id)
-            ->with('success', 'Fiche d\'heures crÃ©Ã©e avec succÃ¨s.');
+            ->with('success', 'Fiche d\'heures créée avec succès.');
     }
 
     public function show(Timesheet $timesheet)
@@ -195,11 +195,11 @@ class TimesheetController extends Controller
 
         if ($user && !$user->isAdmin()) {
             return redirect()->route('timesheets.index')
-                ->with('success', 'Fiche d\'heures mise Ã  jour avec succÃ¨s.');
+                ->with('success', 'Fiche d\'heures mise à jour avec succès.');
         }
 
         return redirect()->route('users.show', $request->user_id)
-            ->with('success', 'Fiche d\'heures mise Ã  jour avec succÃ¨s.');
+            ->with('success', 'Fiche d\'heures mise à jour avec succès.');
     }
 
     public function destroy(Timesheet $timesheet)
@@ -214,11 +214,11 @@ class TimesheetController extends Controller
 
         if ($user && !$user->isAdmin()) {
             return redirect()->route('timesheets.index')
-                ->with('success', 'Fiche d\'heures supprimÃ©e avec succÃ¨s.');
+                ->with('success', 'Fiche d\'heures supprimée avec succès.');
         }
 
         return redirect()->route('users.show', $userId)
-            ->with('success', 'Fiche d\'heures supprimÃ©e avec succÃ¨s.');
+            ->with('success', 'Fiche d\'heures supprimée avec succès.');
     }
 
     public function exportWeekly(Request $request, User $user)

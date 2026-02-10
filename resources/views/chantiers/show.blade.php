@@ -506,6 +506,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Commentaire admin -->
+                    <div class="info-card mt-4">
+                        <div class="card-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <h6 class="card-title">Commentaire admin</h6>
+                        <div class="text-muted" style="white-space: pre-line;">
+                            {{ $chantier->commentaire ?: 'Aucun commentaire' }}
+                        </div>
+                    </div>
                 </div>
             </div>
 

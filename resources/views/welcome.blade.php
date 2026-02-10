@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Szlazak - Connexion</title>
+    <title>Constructo - Connexion</title>
     @include('partials.app-head')
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -529,13 +529,13 @@
 
                 <!-- Message de bienvenue personnalisé -->
                 <h2 class="welcome-title animate-fade-in-up animate-delay-1">
-                    Bienvenue, <span>M. Szlazak</span>
+                    Bienvenue sur <span>Constructo</span>
                 </h2>
                 
                 <p class="welcome-message animate-fade-in-up animate-delay-2">
-                    Accédez à votre tableau de bord de gestion intégrée. 
-                    Suivez vos chantiers en temps réel, gérez vos équipements et 
-                    optimisez votre productivité avec notre plateforme dédiée aux 
+                    Accédez à votre tableau de bord de gestion intégrée.
+                    Suivez vos chantiers en temps réel, gérez vos équipements et
+                    coordonnez vos équipes avec notre plateforme dédiée aux
                     professionnels du BTP.
                 </p>
             </div>

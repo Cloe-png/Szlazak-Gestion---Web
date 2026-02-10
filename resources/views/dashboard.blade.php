@@ -488,11 +488,13 @@
                     <p class="hero-subtitle">Vue d'ensemble des chantiers, équipes et équipements.</p>
                 </div>
                 <div class="hero-actions">
+                    @if(auth()->user() && auth()->user()->isAdmin())
                     <a href="https://outlook.live.com/mail/AQMkADAwATYwMAItY2QyYy0xOTU3LTAwAi0wMAoALgAAA1BB2QahD05HtZM3%2FJ5cV6cBACC4Q86sLwdPqrZyfuqWYHoACNbEXwAAAQ%3D%3D" 
                        target="_blank"
                        class="devis-btn">
                         <i class="fas fa-file-invoice-dollar me-2"></i>Voir les Devis
                     </a>
+                    @endif
                     <div class="date-time-card">
                         <div class="date-time-block">
                             <i class="fas fa-calendar-alt"></i>
@@ -554,6 +556,7 @@
         </div>
 
         <!-- Stats Cards -->
+        @if(auth()->user() && auth()->user()->isAdmin())
         <div class="dashboard-section">
             <div class="section-title">
                 <i class="fas fa-chart-line"></i>Indicateurs clés
@@ -598,6 +601,7 @@
 
             </div>
         </div>
+        @endif
 
         <!-- Derniers Chantiers et Événements -->
         <div class="dashboard-section">

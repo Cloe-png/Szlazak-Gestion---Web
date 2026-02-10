@@ -23,8 +23,8 @@ class DashboardController extends Controller
 
         if ($user && !$user->isAdmin()) {
             $chantiersEnCours = $user->chantiersAttribues()->where('statut', 'En cours')->count();
-            $chantiersTermines = $user->chantiersAttribues()->where('statut', 'TerminÃ©')->count();
-            $chantiersAVenir = $user->chantiersAttribues()->where('statut', 'Ã€ venir')->count();
+            $chantiersTermines = $user->chantiersAttribues()->where('statut', 'Terminé')->count();
+            $chantiersAVenir = $user->chantiersAttribues()->where('statut', 'À venir')->count();
 
             $equipementsDisponibles = Equipement::sum('quantite');
             $equipementsMaintenance = Equipement::where('etat', 'En maintenance')->count();
@@ -47,8 +47,8 @@ class DashboardController extends Controller
                 ->get();
         } else {
             $chantiersEnCours = Chantier::where('statut', 'En cours')->count();
-            $chantiersTermines = Chantier::where('statut', 'TerminÃ©')->count();
-            $chantiersAVenir = Chantier::where('statut', 'Ã€ venir')->count();
+            $chantiersTermines = Chantier::where('statut', 'Terminé')->count();
+            $chantiersAVenir = Chantier::where('statut', 'À venir')->count();
 
             $equipementsDisponibles = Equipement::sum('quantite');
             $equipementsMaintenance = Equipement::where('etat', 'En maintenance')->count();

@@ -17,6 +17,7 @@ class Chantier extends Model
         'responsable_id',
         'statut',
         'tarif',
+        'commentaire',
     ];
 
     protected $casts = [
@@ -41,7 +42,7 @@ class Chantier extends Model
         return $this->hasMany(Timesheet::class);
     }
 
-    // Utilisateurs attribués à ce chantier (web)
+    // Utilisateurs attribuÃ©s Ã  ce chantier (web)
     public function utilisateurs()
     {
         return $this->belongsToMany(User::class)
@@ -80,7 +81,7 @@ class Chantier extends Model
         return $query->where('statut', 'En cours');
     }
 
-    // Scope pour les chantiers terminés
+    // Scope pour les chantiers terminÃ©s
     public function scopeTermines($query)
     {
         return $query->where('statut', 'Terminé');
@@ -92,3 +93,4 @@ class Chantier extends Model
         return $query->where('statut', 'À venir');
     }
 }
+

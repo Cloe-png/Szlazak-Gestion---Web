@@ -41,7 +41,7 @@
             </td>
             <td style="border:0;">
                 <h1>Szlazak Gestion - Récapitulatif des fiches d'heures</h1>
-                <div class="meta">Édité le {{ now()->format('d/m/Y H:i') }} | Période : .......................... au ..............................</div>
+                <div class="meta">ï¿½?dité le {{ now()->format('d/m/Y H:i') }} | Période : .......................... au ..............................</div>
             </td>
         </tr>
     </table>

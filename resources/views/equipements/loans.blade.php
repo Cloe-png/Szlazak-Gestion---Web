@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -180,7 +180,7 @@
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
             <input type="text" class="search-input" id="searchLoans"
-                   placeholder="Rechercher par équipement, employé ou chantier...">
+                   placeholder="Rechercher par équipement, Employé ou chantier...">
         </div>
 
         <div class="table-card animate__animated animate__fadeIn animate__delay-1s">
@@ -196,6 +196,7 @@
                             <th>Retour</th>
                             <th>État après retour</th>
                             <th>Statut</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="loansTable">
@@ -236,6 +237,26 @@
                                         <span class="badge-status badge-warn">En cours</span>
                                     @endif
                                 </td>
+                                <td>
+                                    @if(!$isReturned)
+                                    <form action="{{ route('equipements.loans.return', $loan->id) }}" method="POST" class="d-flex flex-wrap gap-2 align-items-center">
+                                        @csrf
+                                        <select name="etat_apres_retour" class="form-select form-select-sm" style="min-width: 160px;" required>
+                                            <option value="">État après retour</option>
+                                            <option value="Bon état">Bon état</option>
+                                            <option value="Usé">Usé</option>
+                                            <option value="En maintenance">En maintenance</option>
+                                            <option value="Endommagé">Endommagé</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-outline-success"
+                                                onclick="return confirm('Marquer cet emprunt comme retourné ? Le stock sera mis à jour.')">
+                                            <i class="fas fa-rotate-left me-1"></i>Retour
+                                        </button>
+                                    </form>
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -273,3 +294,4 @@
     @include('partials.app-scripts')
 </body>
 </html>
+

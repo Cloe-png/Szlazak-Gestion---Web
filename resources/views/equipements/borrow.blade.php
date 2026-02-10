@@ -78,18 +78,28 @@
 
     <main class="container py-5">
         <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1><i class="fas fa-hand-holding me-3"></i>Emprunter un Matériel</h1>
-                    <p class="mb-0 mt-2" style="opacity: 0.9;">Enregistrez un nouvel emprunt</p>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h1><i class="fas fa-hand-holding me-3"></i>Emprunter un Matériel</h1>
+                        <p class="mb-0 mt-2" style="opacity: 0.9;">Enregistrez un nouvel emprunt</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('equipements.index') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Retour stockage
+                        </a>
+                        <a href="{{ route('equipements.loans') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-boxes-stacked me-2"></i>Voir les emprunts
+                        </a>
+                    </div>
                 </div>
-                <a href="{{ route('equipements.loans') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-arrow-left me-2"></i>Retour aux emprunts
-                </a>
             </div>
-        </div>
 
         <div class="form-card">
+            @if($chantiers->isEmpty())
+                <div class="alert alert-warning">
+                    Aucun chantier disponible. Contactez un administrateur pour l'attribution.
+                </div>
+            @endif
             <form action="{{ route('equipements.loans.store') }}" method="POST">
                 @csrf
 
@@ -110,16 +120,19 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">
-                            <i class="fas fa-hammer me-2"></i>Chantier (optionnel)
+                            <i class="fas fa-hammer me-2"></i>Chantier *
                         </label>
-                        <select name="chantier_id" class="form-select">
-                            <option value="">Aucun chantier</option>
+                        <select name="chantier_id" class="form-select" required>
+                            <option value="">Sélectionnez un chantier</option>
                             @foreach($chantiers as $chantier)
                                 <option value="{{ $chantier->id }}" {{ old('chantier_id') == $chantier->id ? 'selected' : '' }}>
                                     {{ $chantier->nom }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('chantier_id')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -137,7 +150,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end mt-4 pt-4 border-top">
-                    <button type="submit" class="btn-primary-custom">
+                    <button type="submit" class="btn-primary-custom" @if($chantiers->isEmpty()) disabled @endif>
                         <i class="fas fa-save me-2"></i>Enregistrer l'emprunt
                     </button>
                 </div>

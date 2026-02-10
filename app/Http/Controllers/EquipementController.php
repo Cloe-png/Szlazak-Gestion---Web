@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipement;
 use App\Models\EmpruntEquipement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EquipementController extends Controller
 {
@@ -45,7 +46,7 @@ class EquipementController extends Controller
 
         Equipement::create($request->all());
 
-        return redirect()->route('equipements.index')->with('success', 'Ã‰quipement ajoutÃ© avec succÃ¨s.');
+        return redirect()->route('equipements.index')->with('success', 'Équipement ajouté avec succès.');
     }
 
     public function show(Equipement $equipement)
@@ -84,7 +85,7 @@ class EquipementController extends Controller
 
         $equipement->update($request->all());
 
-        return redirect()->route('equipements.index')->with('success', 'Ã‰quipement mis Ã  jour avec succÃ¨s.');
+        return redirect()->route('equipements.index')->with('success', 'Équipement mis à jour avec succès.');
     }
 
     public function destroy(Equipement $equipement)
@@ -95,7 +96,7 @@ class EquipementController extends Controller
         }
 
         $equipement->delete();
-        return redirect()->route('equipements.index')->with('success', 'Ã‰quipement supprimÃ© avec succÃ¨s.');
+        return redirect()->route('equipements.index')->with('success', 'Équipement supprimé avec succès.');
     }
 
     public function loans()
@@ -136,11 +137,11 @@ class EquipementController extends Controller
 
         $request->validate([
             'equipement_id' => 'required|exists:equipements,id',
-            'chantier_id' => 'nullable|exists:chantiers,id',
+            'chantier_id' => 'required|exists:chantiers,id',
             'quantite' => 'required|integer|min:1',
         ]);
 
-        if ($user && !$user->isAdmin() && $request->filled('chantier_id')) {
+        if ($user && !$user->isAdmin()) {
             $isAssigned = $user->chantiersAttribues()
                 ->where('chantiers.id', $request->chantier_id)
                 ->exists();
@@ -154,16 +155,52 @@ class EquipementController extends Controller
             return back()->withErrors(['quantite' => 'Quantité demandée supérieure au stock disponible.'])->withInput();
         }
 
-        EmpruntEquipement::create([
-            'equipement_id' => $equipement->id,
-            'user_id' => $user->id,
-            'chantier_id' => $request->chantier_id,
-            'quantite' => $request->quantite,
-            'date_emprunt' => now(),
-            'statut' => 'En cours',
-        ]);
+        DB::transaction(function () use ($equipement, $request, $user) {
+            EmpruntEquipement::create([
+                'equipement_id' => $equipement->id,
+                'user_id' => $user->id,
+                'chantier_id' => $request->chantier_id,
+                'quantite' => $request->quantite,
+                'date_emprunt' => now(),
+                'statut' => 'En cours',
+            ]);
+
+            $equipement->decrement('quantite', (int) $request->quantite);
+        });
 
         return redirect()->route('equipements.loans')
             ->with('success', 'Emprunt enregistré avec succès.');
+    }
+
+    public function returnLoan(Request $request, EmpruntEquipement $loan)
+    {
+        $user = auth()->user();
+        if ($user && !$user->isAdmin() && $loan->user_id !== $user->id) {
+            abort(403);
+        }
+
+        if ($loan->date_retour) {
+            return redirect()->route('equipements.loans')
+                ->with('error', 'Cet emprunt a déjà été retourné.');
+        }
+
+        $validated = $request->validate([
+            'etat_apres_retour' => 'required|string|max:255',
+        ]);
+
+        DB::transaction(function () use ($loan, $validated) {
+            $loan->update([
+                'date_retour' => now(),
+                'statut' => 'Retourné',
+                'etat_apres_retour' => $validated['etat_apres_retour'],
+            ]);
+
+            if ($loan->equipement) {
+                $loan->equipement->increment('quantite', (int) $loan->quantite);
+            }
+        });
+
+        return redirect()->route('equipements.loans')
+            ->with('success', 'Matériel retourné et stock mis à jour.');
     }
 }

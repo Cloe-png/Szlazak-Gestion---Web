@@ -63,6 +63,11 @@
                         <textarea class="form-control" id="adresse" name="adresse" rows="3" required>{{ $chantier->adresse }}</textarea>
                     </div>
 
+                    <div class="col-12 form-group-custom">
+                        <label for="commentaire">Commentaire (admin)</label>
+                        <textarea class="form-control" id="commentaire" name="commentaire" rows="3" placeholder="Commentaire interne (optionnel)">{{ old('commentaire', $chantier->commentaire) }}</textarea>
+                    </div>
+
                     <div class="col-md-6 form-group-custom">
                         <label for="user_ids">Attribuer à</label>
                         <select class="form-select" id="user_ids" name="user_ids[]" multiple>

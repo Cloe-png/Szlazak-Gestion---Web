@@ -118,6 +118,7 @@ class ChantierController extends Controller
             'date_fin' => 'nullable|date|after_or_equal:date_debut',
             'statut' => 'required|in:À venir,En cours,Terminé,En pause,Annulé',
             'tarif' => 'nullable|numeric|min:0',
+            'commentaire' => 'nullable|string',
             'user_ids' => 'nullable|array',
             'user_ids.*' => 'exists:users,id',
         ]);
@@ -155,9 +156,10 @@ class ChantierController extends Controller
             if (!$isAssigned) {
                 abort(403);
             }
-            return view('chantiers.show-lite', compact('chantier'));
+            $assignees = $chantier->utilisateurs()->orderBy('nom')->get();
+            return view('chantiers.show-lite', compact('chantier', 'assignees'));
         }
-        // Charger toutes les relations nécessaires
+        // Charger toutes les relations nÃ©cessaires
         $chantier->load([
             'responsable',
             'timesheets' => function($query) {
@@ -165,7 +167,7 @@ class ChantierController extends Controller
             },
             'timesheets.user',        ]);
         
-        // Calculer les statistiques détaillées
+        // Calculer les statistiques dÃ©taillÃ©es
         $stats = [
             'total_heures' => $chantier->total_heures,
             'cout_total' => $chantier->cout_total,
@@ -196,14 +198,14 @@ class ChantierController extends Controller
             ->with('user')
             ->get();
         
-        // Dernières fiches d'heures (10 dernières)
+        // DerniÃ¨res fiches d'heures (10 derniÃ¨res)
         $dernieresFiches = $chantier->timesheets()
             ->with('user')
             ->orderBy('date_travail', 'desc')
             ->take(10)
             ->get();
         
-        // Événements associés
+        // Ã‰vÃ©nements associÃ©s
         $evenements = $chantier->evenements()
             ->orderBy('date_debut', 'desc')
             ->get();
@@ -252,7 +254,7 @@ class ChantierController extends Controller
 
         return redirect()
             ->route('chantiers.show', $chantier)
-            ->with('success', 'Utilisateurs attribués avec succès.');
+            ->with('success', 'Utilisateurs attribuÃ©s avec succÃ¨s.');
     }
 
     public function unassignUser(Chantier $chantier, User $user)
@@ -265,7 +267,7 @@ class ChantierController extends Controller
 
         return redirect()
             ->route('chantiers.show', $chantier)
-            ->with('success', 'Utilisateur retiré du chantier.');
+            ->with('success', 'Utilisateur retirÃ© du chantier.');
     }
 
     public function edit(Chantier $chantier)
@@ -287,6 +289,7 @@ class ChantierController extends Controller
             'date_fin' => 'nullable|date|after_or_equal:date_debut',
             'statut' => 'required|in:À venir,En cours,Terminé,En pause,Annulé',
             'tarif' => 'nullable|numeric|min:0',
+            'commentaire' => 'nullable|string',
             'user_ids' => 'nullable|array',
             'user_ids.*' => 'exists:users,id',
         ]);
@@ -318,7 +321,7 @@ class ChantierController extends Controller
 
     public function destroy(Chantier $chantier)
     {
-        // Vérifier s'il y a des fiches d'heures associées
+        // VÃ©rifier s'il y a des fiches d'heures associées
         if ($chantier->timesheets()->count() > 0) {
             return redirect()->route('chantiers.index')
                 ->with('error', 'Impossible de supprimer ce chantier car il a des fiches d\'heures associées.');
@@ -372,14 +375,14 @@ class ChantierController extends Controller
         ]);
 
         return redirect()->route('chantiers.fiches-heures', $chantier)
-            ->with('success', 'Fiche d\'heures ajoutée avec succès.');
+            ->with('success', 'Fiche d\'heures ajoutÃ©e avec succÃ¨s.');
     }
 
-    // MÉTHODES POUR LES STATISTIQUES
+    // MÃ‰THODES POUR LES STATISTIQUES
     
     public function statistiques(Chantier $chantier)
     {
-        // Statistiques détaillées
+        // Statistiques dÃ©taillÃ©es
         $statsDetaillees = $chantier->timesheets()
             ->selectRaw('
                 COUNT(DISTINCT date_travail) as nb_jours_travailles,
@@ -399,7 +402,7 @@ class ChantierController extends Controller
             ->orderByRaw("FIELD(jour, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')")
             ->get();
         
-        // Coût par travailleur
+        // CoÃ»t par travailleur
         $coutParTravailleur = [];
         if ($chantier->tarif) {
             $coutParTravailleur = $chantier->timesheets()
@@ -419,7 +422,7 @@ class ChantierController extends Controller
         ));
     }
 
-    // MÉTHODE POUR EXPORTER LES DONNÉES
+    // MÃ‰THODE POUR EXPORTER LES DONNÃ‰ES
     
     public function exportFichesHeures(Chantier $chantier)
     {
@@ -441,11 +444,11 @@ class ChantierController extends Controller
                 'Date' => $fiche->date_formatee,
                 'Jour' => $fiche->jour,
                 'Travailleur' => $fiche->user->nom,
-                'Heure début' => \Carbon\Carbon::parse($fiche->heure_debut)->format('H:i'),
+                'Heure dÃ©but' => \Carbon\Carbon::parse($fiche->heure_debut)->format('H:i'),
                 'Heure fin' => \Carbon\Carbon::parse($fiche->heure_fin)->format('H:i'),
                 'Pause' => $fiche->pause ? 'Oui' : 'Non',
-                'Heures travaillées' => $heuresTravaillees,
-                'Heures supplémentaires' => $fiche->heures_supp,
+                'Heures travaillÃ©es' => $heuresTravaillees,
+                'Heures supplÃ©mentaires' => $fiche->heures_supp,
                 'Total heures' => $fiche->total_heures,
             ];
         }
@@ -455,11 +458,11 @@ class ChantierController extends Controller
             'Date' => 'TOTAUX',
             'Jour' => '',
             'Travailleur' => '',
-            'Heure début' => '',
+            'Heure dÃ©but' => '',
             'Heure fin' => '',
             'Pause' => '',
-            'Heures travaillées' => $totalHeures,
-            'Heures supplémentaires' => $totalHeuresSupp,
+            'Heures travaillÃ©es' => $totalHeures,
+            'Heures supplÃ©mentaires' => $totalHeuresSupp,
             'Total heures' => $totalHeures + $totalHeuresSupp,
         ];
         
@@ -467,7 +470,7 @@ class ChantierController extends Controller
         return view('chantiers.export-fiches', compact('chantier', 'data'));
     }
 
-    // MÉTHODE POUR MODIFIER LE TARIF
+    // MÃ‰THODE POUR MODIFIER LE TARIF
     
     public function updateTarif(Request $request, Chantier $chantier)
     {
@@ -483,3 +486,4 @@ class ChantierController extends Controller
             ->with('success', 'Tarif mis à jour avec succès.');
     }
 }
+

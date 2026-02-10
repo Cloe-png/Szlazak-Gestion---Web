@@ -254,6 +254,17 @@
         </div>
 
         <div class="container-custom animate__animated animate__fadeIn animate__delay-1s">
+            @php
+                $ruptures = $equipements->filter(function ($e) { return (int) $e->quantite <= 1; });
+            @endphp
+            @if($ruptures->count() > 0)
+                <div class="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <div>
+                        Stock faible (≤ 1) : {{ $ruptures->pluck('nom')->implode(', ') }}.
+                    </div>
+                </div>
+            @endif
             <!-- Barre de recherche -->
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
