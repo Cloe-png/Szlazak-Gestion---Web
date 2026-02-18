@@ -66,3 +66,8 @@ Constructo (Szlazak Gestion) est une application de suivi et de pilotage interne
 - `resources/views` : vues Blade (UI)
 - `routes/web.php` : routes principales
 - `app/Console/Commands` : tâches planifiées (rappels)
+
+## Mise en ligne 
+- https://szlazakgestion.fr/Szlazakgestion/login
+- o2switch
+- Tutoriel : https://www.youtube.com/watch?v=vZFujlyMSO4&t=59s
